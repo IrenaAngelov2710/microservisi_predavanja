@@ -33,28 +33,28 @@ exports.signup = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    const { email, password } = req.body; // destrukcija
+    const { email, password } = req.body;
 
     // 1) Proveruvame dali ima vneseno email i password
     if (!email || !password) {
       return res.status(400).send('Please provide email and password');
     }
-    // 2) Proveruvame dali korisinkot postoi vo nasata data baza
+    // 2) Proveruvame dali korisinkot postoi vo nashta data baza
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).send('Inavlid email or password!');
+      return res.status(401).send('invalid email or password!');
     }
 
     // 3) Sporeduvanje na passwordi
     const isPasswordValid = bcrypt.compareSync(password, user.password);
 
     if (!isPasswordValid) {
-      return res.status(400).send('Invalid email or password');
+      return res.status(400).send('invalid email or password');
     }
 
     // 4) Generirame i isprakame token
     const token = jwt.sign(
-      { id: user._id, name: user.name },
+      { id: user._id, name: user.name, test: 'TEST' },
       process.env.JWT_SECRET,
       {
         expiresIn: process.env.JWT_EXPIRES,
@@ -64,6 +64,6 @@ exports.login = async (req, res) => {
     // 5) Pustame response
     res.status(201).json({ status: 'success', token });
   } catch (err) {
-    res.status(500).send(err);
+    res.stats(500).send(err);
   }
 };
