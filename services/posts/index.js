@@ -19,16 +19,16 @@ app.use(
   })
 );
 
+// routes created and read from the user
+app.get('api/v1/posts/me', post.getByUser);
+app.post('api/v1/posts/me', post.createByUser);
+
 // routes
 app.get('/api/v1/posts', post.getAll);
 app.get('/api/v1/posts/:id', post.getOne);
 app.post('/api/v1/posts', post.create);
 app.patch('/api/v1/posts/:id', post.update);
 app.delete('/api/v1/posts/:id', post.delete);
-
-// routes created and read from the user
-app.get('api/v1/posts/me', post.getByUser);
-app.post('api/v1/posts/me', post.createByUser);
 
 app.listen(process.env.PORTPOST, (err) => {
   if (err) {

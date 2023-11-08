@@ -93,7 +93,7 @@ exports.createByUser = async (req, res) => {
     const post = await Post.create({
       title: req.body.title,
       plot: req.body.plot,
-      author: req.auth.name,
+      author: req.auth.id,
     });
     res.status(201).json(post);
   } catch (err) {

@@ -1,23 +1,26 @@
-import logo from './logo.svg';
 import './App.css';
+import React from 'react';
+import { useState } from 'react';
+import Login from './Login';
+import Register from './Register';
 
 function App() {
+  const [location, setLocation] = useState('login');
+
+  const locationChange = (e) => {
+    setLocation(e.target.dataset.target);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <nav>
+        <button onClick={locationChange} data-target="login">Login</button>
+        <button onClick={locationChange} data-target="register">Register</button>
+      </nav>
+      <div>
+        { location === 'login' ? <Login/> : null }
+        { location === 'register' ? <Register/> : null }
+      </div>
     </div>
   );
 }

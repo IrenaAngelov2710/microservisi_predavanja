@@ -16,6 +16,24 @@ function Register() {
     });
   };
 
+  const register = async () => {
+    try {
+      let res = await fetch('/api/v1/auth/create-account', {
+        method: 'POST', 
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (res.ok) {
+        alert('User is created');
+      }
+
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
       <h2>Register</h2>
