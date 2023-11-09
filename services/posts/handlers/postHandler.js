@@ -71,7 +71,7 @@ exports.delete = async (req, res) => {
   }
 };
 
-// post created by the user
+//post created by the user
 
 exports.create = async (req, res) => {
   try {

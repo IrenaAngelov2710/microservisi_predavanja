@@ -1,6 +1,7 @@
 const express = require('express');
 const post = require('./handlers/postHandler');
 const db = require('../../pkg/db/index');
+const fs = require('fs');
 // cors
 const cors = require('cors');
 const jwt = require('express-jwt');
@@ -20,8 +21,8 @@ app.use(
 );
 
 // routes created and read from the user
-app.get('api/v1/posts/me', post.getByUser);
-app.post('api/v1/posts/me', post.createByUser);
+app.post('/api/v1/posts/me', post.createByUser);
+app.get('/api/v1/posts/me', post.getByUser);
 
 // routes
 app.get('/api/v1/posts', post.getAll);

@@ -2,97 +2,98 @@ import React, { useEffect, useState } from 'react';
 import ProtectedRoute from './ProtectedRoute';
 
 function Login() {
-    // Creating initiatal object
-    const initData = {
-        email: '',
-        password: ''
-    };
+  //1. We will create initial object
+  const initData = {
+    email: '',
+    password: '',
+  };
 
-    // Storing data that we are sending to the database
-    const [data, setData] = useState(initData);
+  //2.Ќе ги зачуваме податоците што ќе ги испратиме на нашето апи во јуссејт
+  const [data, setData] = useState(initData);
 
-    // Creating state for checking if we are loged in
-    const [loggedIn, setLoggedin] = useState(false);
+  //3. Kje kreirame stejt koj kje proveruvame dali sme logirani ili ne
+  const [loggedIn, setLoggedIn] = useState(false);
 
-    // With the upper function we will track the changes in the form
-    const dataChange = (e) => {
-        setData({
-            ...data, 
-            [e.target.name]: e.target.value
-        })
-    };
+  //4. So ovaa funkcija kje gi sledime promenite vo formata
+  const dataChange = (e) => {
+    setData({
+      ...data,
+      [e.target.name]: e.target.value,
+    });
+  };
 
-    // Function login
-    const login = async() => {
-        try{
-            console.log(data);
-            let response = await fetch('/api/v1/auth/login', {
-                method: 'POST',
-                body: JSON.stringify(data),
-                headers: {
-                    "Content-Type": 'application/json',
-                }
-            });
-            // Pretvoren json vo objekt
-            let out = await response.json();
-            if(response.ok) {
-                setLoggedin(true);
-                localStorage.setItem('loggedIn', 'true');
-                localStorage.setItem('token', out.token);
-            }
-        } catch(err) {
-            console.log(err);
-        }
-        alert(out.status); 
-        // ova out go zima json objektot sto go vrakja pri login i toj sodrzi status i token
-    };
+  //5. Imame funkcija login koja normalno e asihrona
+  const login = async () => {
+    try {
+      let res = await fetch('/api/v1/auth/login', {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-type': 'application/json',
+        },
+      });
+      let prevorenJsonVoObjekt = await res.json();
 
-    useEffect(() => {
-        const isLoggedIn = localStorage.getItem(loggedIn) === 'true';
-        setLoggedin(isLoggedIn);
-    }, []);
+      if (res.ok) {
+        setLoggedIn(true);
+        localStorage.setItem('loggedIn', 'true');
+        localStorage.setItem('token', prevorenJsonVoObjekt.token);
+      }
+      alert(prevorenJsonVoObjekt.status);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
-    const logout = () => {
-        setLoggedin(false);
-        localStorage.setItem('loggedin', 'false');
-        localStorage.removeItem('token');
-    };
+  useEffect(() => {
+    const isLoggedIn = localStorage.getItem(loggedIn) === 'true';
+    setLoggedIn(isLoggedIn);
+  }, []);
 
-    return (
-        <>
-            {loggedIn ? (
-                <>
-                <ProtectedRoute/>
-                <button onClick={logout}>Logout</button>
-                </>
-            ) : (
-                <div>
-                    <h2>Login</h2>
-                    <label>
-                        <span>Email</span>
-                        <br/>
-                        <input type='email' 
-                            name='email' 
-                            value={data.email} 
-                            onChange={dataChange}
-                        />
-                    </label>
-                    <br/>
-                    <label>
-                        <span>Password</span>
-                        <br/>
-                        <input type='password' 
-                            name='password' 
-                            value={data.password} 
-                            onChange={dataChange} 
-                        />
-                    </label>
-                    <br />
-                    <button onClick={login}>Login</button>
-                </div>
-                )};
-        </>
-    )
-};
+  const logout = () => {
+    setLoggedIn(false);
+    localStorage.setItem('loggedIn', 'false');
+    localStorage.removeItem('token');
+  };
+
+  return (
+    <div>
+      {loggedIn ? (
+        <div>
+          <ProtectedRoute />
+          <button onClick={logout}>Logout</button>
+        </div>
+      ) : (
+        <div>
+          <h2>Login Form</h2>
+          <label>
+            <span>Email</span>
+            <br />
+            <input
+              type='email'
+              name='email'
+              value={data.email}
+              onChange={dataChange}
+            />
+          </label>
+          <br />
+          <label>
+            <span>Password</span>
+            <br />
+            <input
+              type='password'
+              name='password'
+              value={data.password}
+              onChange={dataChange}
+            />
+            <br />
+          </label>
+          <br />
+          <button onClick={login}>Login</button>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default Login;
